@@ -1,0 +1,77 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Pingora Example - Proxy",
+  "steps": [
+    {
+      "file": "pingora/examples/app/proxy.rs",
+      "description": "从 ProxyApp 来看，首先我们需要一个 TransportConnector",
+      "line": 41
+    },
+    {
+      "file": "pingora/examples/app/proxy.rs",
+      "description": "然后用 client_connector 的 new_stream 执行连接的对象",
+      "line": 91
+    },
+    {
+      "file": "pingora-core/src/connectors/mod.rs",
+      "description": "有一个 keepalive pool",
+      "line": 135
+    },
+    {
+      "file": "pingora-core/src/connectors/mod.rs",
+      "description": "offload 是用来获取 runtime handle (tokio Handle) 的",
+      "line": 148
+    },
+    {
+      "file": "pingora-core/src/connectors/mod.rs",
+      "description": "初始化之后需要用 new_stream 连接到指定的 Peer",
+      "line": 158
+    },
+    {
+      "file": "pingora-core/src/connectors/mod.rs",
+      "description": "首先是要 get_runtime，这里如果在创建的时候指定了 offload 的话，就可以获取到 runtime",
+      "line": 162
+    },
+    {
+      "file": "pingora-core/src/connectors/offload.rs",
+      "description": "get_runtime 的实现是从 pool 里根据随机数拿一个 Handle",
+      "line": 66
+    },
+    {
+      "file": "pingora-core/src/connectors/mod.rs",
+      "description": "然后根据 peer 的地址随机绑一个 v4/v6 的地址",
+      "line": 163
+    },
+    {
+      "file": "pingora-core/src/connectors/mod.rs",
+      "description": "如果从 hash 里拿到了可以复用的 Handle，就用这个 rt 进行 spawn",
+      "line": 165
+    },
+    {
+      "file": "pingora-core/src/connectors/mod.rs",
+      "description": "否则就直接 do_connect，不管运行时了",
+      "line": 172
+    },
+    {
+      "file": "pingora-core/src/connectors/mod.rs",
+      "description": "do_connect_inner 是不带 timeout 的连接，在 do_connect 里做 timeout 的判断逻辑",
+      "line": 275
+    },
+    {
+      "file": "pingora-core/src/connectors/mod.rs",
+      "description": "connect 其实就是先连接 L4（TCP），再根据要不要 TLS 包一层",
+      "line": 296
+    },
+    {
+      "file": "pingora/examples/app/proxy.rs",
+      "description": "一旦连接成功，就有了一个稳定的传输通道。\n这时候对于一个纯粹的 ProxyApp 就可以直接 Copy 了",
+      "line": 95
+    },
+    {
+      "file": "pingora/examples/app/proxy.rs",
+      "description": "然后进行 select 边读边写，高手啊",
+      "line": 53
+    }
+  ],
+  "ref": "5fdf287c4d6a9ddc8a9caf3447cd27575c13a24c"
+}
